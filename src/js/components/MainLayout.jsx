@@ -6,6 +6,7 @@ import 'moment-timezone';
 
 import Header from './Header.jsx';
 import Form from './Form.jsx';
+import NavBar from './NavBar.jsx'
 import PromotionsContainer from './PromotionsContainer.jsx'
 import RestaurantsContainer from './RestaurantsContainer.jsx'
 
@@ -16,7 +17,8 @@ export default class MainLayout extends React.Component {
 
 		this.state = {
 			value: '', 
-			restaurant: ''
+			restaurant: '',
+			ssr: null
 		}
 		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleUserInput = this.handleUserInput.bind(this);
@@ -34,24 +36,16 @@ export default class MainLayout extends React.Component {
 		this.setState({
 			restaurant: this.state.value
 		})
-		/*axios.get(`http://api.opencagedata.com/geocode/v1/json?q=${this.state.value}&key=${this.state.geocoderKey}`)
+		axios.get(`https://gs7qteix17.execute-api.us-east-1.amazonaws.com/dev/promotionsForUser`)
 			 .then( response => {
-			 	console.log(response.data.results[0].components)
+			 	console.log(response.data)
 			 	this.setState({
-			 		place: {
-			 			town: response.data.results[0].components.city,
-			 			state: response.data.results[0].components.state
-			 		},
-			 		lat: response.data.results[0].geometry.lat,
-			 		long: response.data.results[0].geometry.lng
+			 		ssr: response.data
 			 	})
+			 })
 			 .catch( err => {
-			 	this.setState({
-			 		loading: false,
-			 		loadingDone: false,
-			 		failed: true,
-			 	})
-			}) */
+				console.log(err)
+			}) 
 	}
 
 	componentWillMount() {
@@ -71,9 +65,10 @@ export default class MainLayout extends React.Component {
 				  text={this.state.value}
 				  onUserInput={this.handleUserInput}
 				/> 
+				
 				<br /> <br /> <br />
 				<div className='col-md-12'>
-					<RestaurantsContainer /> 
+					<RestaurantsContainer html={this.state.ssr} /> 
 				</div>
 
 			</div>
